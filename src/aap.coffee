@@ -30,9 +30,9 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ###
 
-Q      = require 'q'
-assert = require 'assertive'
-aap    = {}
+Promise = require 'bluebird'
+assert  = require 'assertive'
+aap     = {}
 
 # TODO: use some sort of future extensibility framework from assertive
 green = (x) -> "\x1B[32m#{ x }\x1B[39m"
@@ -43,16 +43,19 @@ emsg  = (message, explanation) ->
     message = "Assertion failed: #{explanation}\n#{clear}#{message}"
   message
 
+# borrowed from Q
+isPromiseAlike = (p) -> p is Object(p) and 'function' is typeof p.then
+
 aap.rejects = (expln, testee, name='rejects') ->
   if testee?
     assert.hasType "argument 1 of #{name} must be a doc string", String, expln
   else
     [testee, expln] = [expln, null]
 
-  unless Q.isPromiseAlike testee
+  unless isPromiseAlike testee
     unless 'function' is typeof testee
       throw new Error "#{name} expects #{green 'a function or promise'} but got #{red testee}"
-    testee = Q.try testee
+    testee = Promise.try testee
 
   if name is 'rejects'
     testee.then(
@@ -71,7 +74,7 @@ for own name, fn of assert
     aap[name] ?= (args...) ->
       return fn() unless args.length
       testee = args.pop()
-      if Q.isPromiseAlike testee
+      if isPromiseAlike testee
         testee.then (val) -> fn args..., val
       else
         fn args..., testee

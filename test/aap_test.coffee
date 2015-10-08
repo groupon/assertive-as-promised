@@ -1,8 +1,6 @@
-Q      = require 'q'
-test   = require '../lib/stable' # old, known working copy for testing
-assert = require '../'
-
-require('mocha-as-promised')()
+Promise = require 'bluebird'
+test    = require 'assertive-as-promised' # old, known working copy for testing
+assert  = require '../'
 
 backwardCompatible =
   truthy:
@@ -78,14 +76,14 @@ describe 'assertive backward-compatible functions', ->
       {pass, fail} = bits
       for pf, {args} of bits
         bits[pf].pargs ?= args[0...args.length-1].concat(
-          [Q(args[args.length-1])])
+          [Promise.resolve(args[args.length-1])])
 
       describe "#{name}()", ->
         it 'returns a promise when passed a promise', ->
-          test.truthy Q.isPromise assert[name](pass.pargs...)
+          test.truthy assert[name](pass.pargs...) instanceof Promise
 
         it 'does not return a promise when not passed one', ->
-          test.falsey Q.isPromise assert[name](pass.args...)
+          test.falsey assert[name](pass.args...) instanceof Promise
 
         it "resolves for #{pass.descr}", ->
           test.resolves "#{name} should succeed", -> assert[name] pass.pargs...
@@ -98,8 +96,8 @@ describe 'assertive backward-compatible functions', ->
 describe 'assert-as-promised new functions', ->
   describe 'rejects()', ->
     it 'always returns a promise', ->
-      test.truthy Q.isPromise assert.rejects Q(42)
-      test.truthy Q.isPromise assert.rejects -> 42
+      test.truthy assert.rejects(Promise.resolve 42) instanceof Promise
+      test.truthy assert.rejects(-> 42) instanceof Promise
 
     it 'errors on invalid argument', ->
       test.match /^rejects expects/, test.throws(-> assert.rejects 42).message
@@ -108,23 +106,23 @@ describe 'assert-as-promised new functions', ->
       test.equal 'kittens', assert.rejects -> throw 'kittens'
 
     it 'resolves for a function which returns a rejected promise', ->
-      test.equal 'kittens', assert.rejects -> Q.reject 'kittens'
+      test.equal 'kittens', assert.rejects -> Promise.reject 'kittens'
 
     it 'resolves for a rejected promise', ->
-      test.equal 'kittens', assert.rejects Q.reject 'kittens'
+      test.equal 'kittens', assert.rejects Promise.reject 'kittens'
 
     it 'rejects for a function which returns a resolved promise', ->
       test.equal "Promise wasn't rejected as expected to",
-        test.rejects(assert.rejects -> Q 42).get('message')
+        test.rejects(assert.rejects -> Promise.resolve 42).get('message')
 
     it 'rejects a resolved promise', ->
       test.equal "Promise wasn't rejected as expected to",
-        test.rejects(assert.rejects Q 42).get('message')
+        test.rejects(assert.rejects Promise.resolve 42).get('message')
 
   describe 'resolves()', ->
     it 'always returns a promise', ->
-      test.truthy Q.isPromise assert.resolves Q(42)
-      test.truthy Q.isPromise assert.resolves -> 42
+      test.truthy assert.resolves(Promise.resolve 42) instanceof Promise
+      test.truthy assert.resolves(-> 42) instanceof Promise
 
     it 'errors on invalid argument', ->
       test.match /^resolves expects/, test.throws(-> assert.resolves 42).message
@@ -135,14 +133,18 @@ describe 'assert-as-promised new functions', ->
 
     it 'rejects for a function which returns a rejected promise', ->
       test.include 'Promise was rejected despite resolves assertion:\n42',
-        test.rejects(assert.resolves -> Q.reject new Error 42).get('message')
+        test.rejects(assert.resolves -> Promise.reject new Error 42).get(
+          'message'
+        )
 
     it 'rejects for a rejected promise', ->
       test.include 'Promise was rejected despite resolves assertion:\n42',
-        test.rejects(assert.resolves Q.reject new Error 42).get('message')
+        test.rejects(assert.resolves Promise.reject new Error 42).get(
+          'message'
+        )
 
     it 'resolves for a function which returns a resolved promise', ->
-      test.equal 'kittens', assert.resolves -> Q 'kittens'
+      test.equal 'kittens', assert.resolves -> Promise.resolve 'kittens'
 
     it 'resolves for a resolved promise', ->
-      test.equal 'kittens', assert.resolves Q 'kittens'
+      test.equal 'kittens', assert.resolves Promise.resolve 'kittens'
