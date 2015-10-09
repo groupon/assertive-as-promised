@@ -6,9 +6,10 @@ backward-compatible, so all of the existing assertive documentation applies.
 
 ## How to Use
 
-This is best used with something like [Mocha as Promised][].  All of
-assertive's assertions are extended to accept promises as their argument to be
-tested and return a promise which will be resolved or rejected.
+This is best used with something like [Mocha] (version >= 1.18.0) which
+handles returned promises correctly.  All of assertive's assertions are
+extended to accept promises as their argument to be tested and return a
+promise which will be resolved or rejected.
 
 For all existing assertive functions, you may simply replace the
 argument with a promise for an equivalent argument.
@@ -74,5 +75,10 @@ it 'runs and fails asynchronously', ->
 (this may be bad style, depending on who you ask, but I find it useful if you
 have `it()`s with a lot of setup overhead)
 
+## Development
+
+* `src/aap.coffee` is the main library; it compiles to `lib/aap.js`.
+* `test/assertive_test.coffee` is a copy of the [assertive] library tests, slightly modified to run correctly in our test environment (see comments at the top)
+
 [assertive]: https://github.com/groupon/assertive
-[Mocha as Promised]: https://github.com/domenic/mocha-as-promised
+[Mocha]: https://mochajs.org/
