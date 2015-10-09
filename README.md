@@ -32,7 +32,7 @@ argument a promise OR a function that returns a promise.  The equivalent
 counterpart to `notThrows` is called `resolves`.  `rejects` returns a promise
 for the rejection error, and thus composes nicely with other assertions.
 
-## Examples (using Mocha as Promised)
+## Examples (using Mocha)
 
 ```coffee
 { runSync, runAsync }  = require './some-library'
