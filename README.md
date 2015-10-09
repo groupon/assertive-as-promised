@@ -1,8 +1,8 @@
 # Assertive for Promises
 
 **Assertive as Promised** extends [Assertive][assertive] for asserting things
-about promises; specifically Q-compliant promises at the moment.  It is 100%
-backward-compatible, so all of the existing assertive documentation applies.
+about standards-compliant promises.  It is 100% backward-compatible, so all of
+the existing assertive documentation applies.
 
 ## How to Use
 
@@ -16,8 +16,9 @@ argument with a promise for an equivalent argument.
 `assert.equal('foo', funcThatReturnsAString())` becomes
 `assert.equal('foo', funcThatReturnsAPromiseForAString())`.  Note that you may
 get nicer and more consistent errors if you put any function calls that may
-have a risk of throwing an exception synchronously inside a `Q.try()`, thusly:
-`assert.equal('foo', Q.try -> funcThatReturnsAPromiseForAString())`
+have a risk of throwing an exception synchronously inside a bluebird
+`Promise.try()`, thusly:
+`assert.equal('foo', Promise.try -> funcThatReturnsAPromiseForAString())`
 
 Note for `throws()` and `notThrows()` that they accept a function (which may
 throw a *synchronous* exception) or a promise for a function (which
@@ -35,8 +36,8 @@ for the rejection error, and thus composes nicely with other assertions.
 
 ```coffee
 { runSync, runAsync }  = require './some-library'
-assert = require 'assertive-as-promised'
-Q      = require 'q'
+assert  = require 'assertive-as-promised'
+Promise = require 'bluebird'
 # runAsync returns a promise
 
 it 'runs synchronously', ->
@@ -51,7 +52,7 @@ it 'runs asynchronously', ->
 it 'fails asynchronously', ->
   assert.rejects 'fails on bad', -> runAsync('bad')
 
-fn = -> Q.try -> throw 'kaboom'
+fn = -> Promise.try -> throw 'kaboom'
 it 'fails asynchronously with the proper error', ->
   assert.equal 'kaboom', assert.rejects fn
 ```
@@ -63,10 +64,10 @@ happy, e.g.:
 ```coffee
 { runAsync } = require './some-library'
 assert       = require 'assertive-as-promised'
-Q            = require 'q'
+Promise      = require 'bluebird'
 
 it 'runs and fails asynchronously', ->
-  Q.all [
+  Promise.all [
     assert.deepEqual 'got proper hash', { a: 42 }, runAsync('good')
     assert.rejects 'fails on bad', -> runAsync('bad')
   ]

@@ -1,6 +1,6 @@
 {
   "name": "assertive-as-promised",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Extends assertive with promise support",
   "main": "lib/aap.js",
   "repository": {
@@ -10,6 +10,9 @@
   "scripts": {
     "prepublish": "./node_modules/.bin/coffee -bcps < src/aap.coffee > lib/aap.js.tmp && mv -f lib/aap.js.tmp lib/aap.js || (rm -f lib/aap.js.tmp ; false)",
     "test": "npm install && ./node_modules/.bin/mocha"
+  },
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org"
   },
   "author": "David Bushong <david+npm@bushong.net>",
   "license": "BSD-3-Clause",

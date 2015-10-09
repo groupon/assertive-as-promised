@@ -1,4 +1,4 @@
-## 1.0.0
+## 1.0.1
 
 * Switch to bluebird
 * Upgrade requirements
