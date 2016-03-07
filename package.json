@@ -1,6 +1,6 @@
 {
   "name": "assertive-as-promised",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Extends assertive with promise support",
   "license": "BSD-3-Clause",
   "main": "lib/aap.js",
