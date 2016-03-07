@@ -38,8 +38,8 @@
     "nodemon": "^1.0.0"
   },
   "author": {
-    "name": "David Bushong",
-    "email": "david+npm@bushong.net"
+    "name": "Groupon",
+    "email": "opensource@groupon.com"
   },
   "files": [
     "*.js",
