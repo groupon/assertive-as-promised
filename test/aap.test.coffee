@@ -96,8 +96,10 @@ describe 'assertive backward-compatible functions', ->
 describe 'assert-as-promised new functions', ->
   describe 'rejects()', ->
     it 'always returns a promise', ->
-      test.truthy assert.rejects(Promise.resolve 42) instanceof Promise
-      test.truthy assert.rejects(-> 42) instanceof Promise
+      for res in [assert.rejects(Promise.resolve 42), assert.rejects(-> 42)]
+        res?.catch? ->
+        test.expect res instanceof Promise
+      null
 
     it 'errors on invalid argument', ->
       test.match /^rejects expects/, test.throws(-> assert.rejects 42).message
