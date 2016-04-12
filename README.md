@@ -4,6 +4,34 @@
 about standards-compliant promises.  It is 100% backward-compatible, so all of
 the existing assertive documentation applies.
 
+# DEPRECATED
+
+As of `assertive-2.1.0`, this functionality has been rolled into
+[assertive] itself.  The only functional change is that you can no longer
+pass functions-which-return-promises as arguments to `resolves()` and
+`rejects()` - you should replace things like:
+
+```coffee
+assert = require 'assertive-as-promised'
+assert.rejects -> doSomething('blah')
+```
+
+with
+
+```coffee
+assert = require 'assertive'
+
+# this version will explode your test if there is a synchronous throw
+# during the invocation of doSomething() (which may be a good thing -
+# you can test for that behavior separately with assert.throws())
+assert.rejects(doSomething('blah')).then (err) -> ...
+
+# this version will turn any synchronous throw into a rejection which will
+# be available as err
+Promise = require 'bluebird'
+assert.rejects(Promise.try -> doSomething('blah')).then (err) ->
+```
+
 ## How to Use
 
 This is best used with something like [Mocha] (version >= 1.18.0) which
