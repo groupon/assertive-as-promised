@@ -1,3 +1,9 @@
+### 1.0.4
+
+* Apply latest nlm generator - **[@markowsiak](https://github.com/markowsiak)** [#4](https://github.com/groupon/assertive-as-promised/pull/4)
+  - [`8d9ebd1`](https://github.com/groupon/assertive-as-promised/commit/8d9ebd118d40993cbf8386b2a898575c6859fce6) **chore:** Apply latest nlm generator
+
+
 ### 1.0.3
 
 * docs: announce deprecation due to assertive>2.1.0 - **[@dbushong](https://github.com/dbushong)** [#3](https://github.com/groupon/assertive-as-promised/pull/3)
